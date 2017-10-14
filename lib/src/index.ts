@@ -27,23 +27,24 @@ export const buildTypedABIs = () => {
 
 const typedABI = (file: string, printer: Output, types: Types) => {
     const fileDir = file.split('/');
+    const rootPath = process.cwd()
     const fileName = fileDir[fileDir.length - 1].split('.')[0];
+    const filePath = `${rootPath}\\${file}`
 
     printer.print(`export default interface ${fileName} {`)
-    require(file).map((abiFunc) => {
-        console.log(abiFunc)
+    require(filePath).map((abiFunc) => {
         if (abiFunc.type !== 'function') {
             return
         }
         const inputs = getInputs({
             types,
             abiFunc,
-            config: getMapping({ fileName, inOut: 'input', funcName: abiFunc })
+            config: getMapping({ filePath, inOut: 'input', funcName: abiFunc })
         })
         const outputs = getOutputs({
             types,
             abiFunc,
-            config: getMapping({ fileName, inOut: 'output', funcName: abiFunc })
+            config: getMapping({ filePath, inOut: 'output', funcName: abiFunc })
         })
 
         const ABIParamless = `ABIFuncParamless${outputs.length === 0
@@ -56,3 +57,4 @@ const typedABI = (file: string, printer: Output, types: Types) => {
     })
     printer.print('}')
 }
+

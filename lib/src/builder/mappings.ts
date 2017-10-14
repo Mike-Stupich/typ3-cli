@@ -1,4 +1,5 @@
-import { existsSync } from "fs";
+import { existsSync } from 'fs';
+import * as path from 'path'
 
 const getMappings = ({ types, abiFunc, config, input}) => {
     const abiInOut = input
@@ -32,9 +33,8 @@ export const getOutputs = ({types, abiFunc, config }) => {
     return getMappings({ types, abiFunc, config, input: false })
 }
 
-export const getMapping = ({ fileName, inOut, funcName }) => {
-    const file = `${fileName}.${inOut}.json`;
-    const exists = existsSync(file);
-
-    return exists ? require(file) : funcName;
+export const getMapping = ({ filePath, inOut, funcName }) => {
+    const resolvedPath = path.resolve(filePath).split('.')[0]
+    const file = `${resolvedPath}.${inOut}.json`;
+    return existsSync(file) ? require(file) : funcName;
 }
