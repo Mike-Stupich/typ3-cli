@@ -31,7 +31,7 @@ const typedABI = (file: string, printer: Output, types: Types) => {
 
     printer.print(`export default interface ${fileName} {`)
     require(file).map((abiFunc) => {
-        console.log(abiFunc)
+
         if (abiFunc.type !== 'function') {
             return
         }
