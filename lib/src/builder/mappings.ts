@@ -29,3 +29,10 @@ export const getInputs = ({ types, abiFunc, config }) => {
 export const getOutputs = ({types, abiFunc, config }) => {
     return getMappings({ types, abiFunc, config, input: false })
 }
+
+export const getMapping = ({ fileName, inOut, funcName }) => {
+    const mapping = require(`${fileName}.${inOut}.json`)
+    ? require(`${fileName}.${inOut}.json`)
+    : funcName
+    return mapping
+}
