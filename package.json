@@ -25,6 +25,6 @@
     "command-line-args": "^4.0.7"
   },
   "bin": {
-    "typ3-cli": "./dist/lib/index.js"
+    "typ3-cli": "./dist/lib/src/index.js"
   }
 }
