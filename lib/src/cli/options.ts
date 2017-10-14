@@ -1,4 +1,5 @@
 export const optionDefinitions = [
     { name: 'files', alias: 'f', type: String, multiple: true },
-    { name: 'outputDir', alias: 'd', type: String }
+    { name: 'output', alias: 'o', type: String },
+    { name: 'help', alias: 'h' }
 ]

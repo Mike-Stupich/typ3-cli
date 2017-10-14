@@ -1,4 +1,5 @@
 import { options } from './cli'
+import { Usage } from './cli/usage'
 import { Output } from './io'
 import { getInputs, getOutputs, getMapping, Types, interfaces } from './builder'
 
@@ -9,7 +10,13 @@ export const buildTypedABIs = () => {
     const outputDir = opts.outputDir
     ? opts.outputDir
     : './output.d.ts'
+
+    if (!files || opts.help){
+        return console.log(Usage);
+    }
+
     const printer = new Output(outputDir)
+
     files.map((file) => {
         typedABI(file, printer, types)
     })

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "test": "node dist/index.js -f lib/test/auction.json -o output"
+    "test": "npm run build && node dist/index.js -f lib/test/auction.json -o output"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,8 @@
     "typescript": "^2.5.3"
   },
   "dependencies": {
-    "command-line-args": "^4.0.7"
+    "command-line-args": "^4.0.7",
+    "command-line-usage": "^4.0.1"
   },
   "bin": {
     "typ3-cli": "./dist/lib/src/index.js"
