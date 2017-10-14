@@ -8,7 +8,7 @@ export class Output {
     }
 
     public print = (text) => {
-        appendFileSync(this.outputFile, `text\n`)
+        appendFileSync(this.outputFile, `${text}\n`)
     }
 
     public getOutput = () => this.outputFile

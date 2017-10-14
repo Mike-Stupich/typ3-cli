@@ -1,3 +1,5 @@
+import { existsSync } from "fs";
+
 const getMappings = ({ types, abiFunc, config, input}) => {
     const abiInOut = input
     ? abiFunc.inputs
@@ -31,8 +33,8 @@ export const getOutputs = ({types, abiFunc, config }) => {
 }
 
 export const getMapping = ({ fileName, inOut, funcName }) => {
-    const mapping = require(`${fileName}.${inOut}.json`)
-    ? require(`${fileName}.${inOut}.json`)
-    : funcName
-    return mapping
+    const file = `${fileName}.${inOut}.json`;
+    const exists = existsSync(file);
+
+    return exists ? require(file) : funcName;
 }

@@ -17,7 +17,8 @@ export const buildTypedABIs = () => {
 const typedABI = (file: string, outputDir: string) => {
     const printer = new Output(outputDir)
     const types = new Types()
-    const fileName = file.split('.')[0]
+    const fileDir = file.split('/');
+    const fileName = fileDir[fileDir.length - 1].split('.')[0];
 
     printer.print(`export default interface ${fileName} {`)
     require(file).map((abiFunc) => {

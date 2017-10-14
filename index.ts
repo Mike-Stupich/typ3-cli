@@ -1,1 +1,3 @@
-export { } from './src'
+import { buildTypedABIs } from "./lib/src";
+
+buildTypedABIs();
