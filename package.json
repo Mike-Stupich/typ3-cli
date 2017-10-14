@@ -27,6 +27,6 @@
     "command-line-usage": "^4.0.1"
   },
   "bin": {
-    "typ3-cli": "./dist/lib/src/index.js"
+    "typ3-cli": "./dist/index.js"
   }
 }
