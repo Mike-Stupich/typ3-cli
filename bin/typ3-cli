@@ -1,0 +1,40 @@
+#!/bin/sh
+(set -o igncr) 2>/dev/null && set -o igncr; # cygwin encoding fix
+
+basedir=`dirname "${0}"`
+
+case `uname` in
+	*CYGWIN*)
+		basedir=`cygpath -w "${basedir}"`
+		;;
+esac
+
+if [ -f "${basedir}/typ3-cli-cli.js" ]
+then
+	node "${basedir}/typ3-cli-cli.js" ${@}
+	exit "${?}"
+fi
+
+NODE_EXE="${basedir}/node"
+if [ -x "${basedir}/node.exe" ]
+then
+	NODE_EXE="${basedir}/node.exe"
+elif ! [ -x "${NODE_EXE}" ]
+then
+	NODE_EXE=node
+fi
+
+CLI_JS="${basedir}/../lib/node_modules/typ3-cli/bin/typ3-cli-cli.js"
+
+case `uname` in
+	*CYGWIN*)
+		PREFIX=`npm prefix -g`
+		PREFIX_CLI_JS="${PREFIX}/node_modules/typ3-cli/bin/typ3-cli-cli.js"
+		if [ -f "${PREFIX_CLI_JS}" ]
+		then
+	  		CLI_JS="${PREFIX_CLI_JS}"
+		fi
+		;;
+esac
+
+"${NODE_EXE}" "${CLI_JS}" "${@}"
