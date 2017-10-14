@@ -5,23 +5,27 @@ import { getInputs, getOutputs, getMapping, Types, interfaces } from './builder'
 export const buildTypedABIs = () => {
     const opts = options
     const files = opts.files
+    const types = new Types()
     const outputDir = opts.outputDir
     ? opts.outputDir
-    : './'
+    : './output.d.ts'
+    const printer = new Output(outputDir)
     files.map((file) => {
-        typedABI(file, outputDir)
+        typedABI(file, printer, types)
+    })
+    printer.print(interfaces)
+    Object.keys(types.getTypes()).forEach((curr, index) => {
+        printer.print(`type ${curr} = ${types.getTypes()[curr]}`)
     })
 }
 
-
-const typedABI = (file: string, outputDir: string) => {
-    const printer = new Output(outputDir)
-    const types = new Types()
+const typedABI = (file: string, printer: Output, types: Types) => {
     const fileDir = file.split('/');
     const fileName = fileDir[fileDir.length - 1].split('.')[0];
 
     printer.print(`export default interface ${fileName} {`)
     require(file).map((abiFunc) => {
+        console.log(abiFunc)
         if (abiFunc.type !== 'function') {
             return
         }
@@ -39,14 +43,10 @@ const typedABI = (file: string, outputDir: string) => {
         const ABIParamless = `ABIFuncParamless${outputs.length === 0
             ? ''
             : `<{${outputs}}>`}`
-        const ABIFunc = `ABIFunc<${inputs}>${outputs.length === 0
+        const ABIFunc = `ABIFunc<{${inputs}}${outputs.length === 0
             ? ''
-            : `,<{${outputs}}`}>`
+            : `,{${outputs}}`}>`
+        printer.print(`${abiFunc.name}: ${inputs === '' ? `${ABIParamless}` : `${ABIFunc}`}`)
     })
     printer.print('}')
-    printer.print(interfaces)
-
-    Object.keys(types.getTypes()).forEach((curr, index) => {
-        printer.print(`type ${curr} = ${types.getTypes()[curr]}`)
-    })
 }
