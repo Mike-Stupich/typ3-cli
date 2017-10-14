@@ -1,0 +1,23 @@
+{
+  "name": "typ3-cli",
+  "version": "1.0.0",
+  "description": "CLI tool for creating typed definition files from ABI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mike-Stupich/typ3-cli.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mike-Stupich/typ3-cli/issues"
+  },
+  "homepage": "https://github.com/Mike-Stupich/typ3-cli#readme",
+  "devDependencies": {
+    "command-line-args": "^4.0.7",
+    "tslint": "^5.7.0"
+  }
+}
