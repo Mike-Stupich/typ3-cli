@@ -32,7 +32,12 @@ const typedABI = (file: string, printer: Output, types: Types) => {
     const filePath = `${rootPath}\\${file}`
 
     printer.print(`export default interface ${fileName} {`)
+<<<<<<< HEAD
     require(filePath).map((abiFunc) => {
+=======
+    require(file).map((abiFunc) => {
+
+>>>>>>> f8ed10b658983649b2c83be143e86086ca8c68a4
         if (abiFunc.type !== 'function') {
             return
         }
