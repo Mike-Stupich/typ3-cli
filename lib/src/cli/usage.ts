@@ -1,9 +1,9 @@
-import * as getUsage from "command-line-usage";
+import * as getUsage from 'command-line-usage';
 
 const sections = [
     {
       header: 'cli for typ3',
-      content: 'Generates something.'
+      content: 'Generate a type definition file for ABI\'s.'
     },
     {
       header: 'Options',
@@ -11,12 +11,12 @@ const sections = [
         {
           name: 'f',
           typeLabel: '[underline]{file}',
-          description: 'The json ABI input to process.'
+          description: 'The ABI to process.'
         },
         {
             name: 'o',
-            typeLabel: '[underline]{output file}',
-            description: 'Where the output typing file should go'
+            typeLabel: '[underline]{output}',
+            description: 'Destination of type definition file'
         },
         {
           name: 'h',

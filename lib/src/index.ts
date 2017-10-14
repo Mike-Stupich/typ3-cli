@@ -1,5 +1,4 @@
-import { options } from './cli'
-import { usage } from './cli/usage'
+import { options, usage } from './cli'
 import { Output } from './io'
 import { getInputs, getOutputs, getMapping, Types, interfaces } from './builder'
 
