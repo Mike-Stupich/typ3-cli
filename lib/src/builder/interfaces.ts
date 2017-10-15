@@ -1,12 +1,14 @@
 export const interfaces = `
-interface ABIFunc<T, K = void> {
-  call(x: T): string;
-  encodeOutput(x: T): string;
-  decodeOutput(argStr: string): K;
+interface ABIFuncCall<T, K = void> {
+  (x: T): Promise<K>;
 }
-interface ABIFuncParamless<T = void> {
-  call(): string;
-  encodeOutput(): string;
-  decodeOutput(argStr: string): T;
+interface ABIFuncParamlessCall<T = void> {
+  (): Promise<T>;
 }
-`
+interface ABIFuncSend<T> {
+  (x: T): Promise<string>;
+}
+interface ABIFuncParamlessSend {
+  (): Promise<string>;
+}
+`;
