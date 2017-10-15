@@ -17,6 +17,7 @@ export const buildTypedABIs = () => {
 
   files.map(file => {
     typedABI(file, printer, types);
+    typedABIConnected(file, printer, types);
   });
   printer.print(interfaces);
   Object.keys(types.getTypes()).forEach((curr, index) => {
@@ -59,6 +60,54 @@ const typedABI = (file: string, printer: Output, types: Types) => {
       ? ''
       : `<{${outputs}}>`}`;
     const ABIFuncCall = `ABIFuncCall<{${inputs}}${outputs.length === 0
+      ? ''
+      : `,{${outputs}}`}>`;
+    const isConst = abiFunc.constant;
+    const param = isConst ? ABIFuncCall : ABIFuncSend;
+    const paramless = isConst ? ABIParamlessCall : ABIParamlessSend;
+    printer.print(
+      `${abiFunc.name}: ${inputs === '' ? `${paramless}` : `${param}`}`
+    );
+  });
+  printer.print('}');
+};
+
+const typedABIConnected = (file: string, printer: Output, types: Types) => {
+  const fileDir = file.split(sep);
+  const rootPath = process.cwd();
+  const fileName = basename(fileDir[fileDir.length - 1]).split('.')[0];
+  const filePath = join(rootPath, file);
+  printer.print(
+    `export interface I${fileName[0].toUpperCase()}${fileName.length > 1
+      ? fileName.slice(1)
+      : ''}Connected {`
+  );
+  const inputMappings = getMapping({ filePath, inOut: 'input' });
+  const outputMappings = getMapping({ filePath, inOut: 'output' });
+  require(filePath).map((abiFunc, index) => {
+    if (abiFunc.type !== 'function') {
+      return;
+    }
+    const inputs = getMappings({
+      types,
+      abiFunc,
+      config: inputMappings,
+      isInput: true
+    });
+    const outputs = getMappings({
+      types,
+      abiFunc,
+      config: outputMappings,
+      isInput: false
+    });
+
+    const ABIParamlessSend = `ABIFuncParamlessSendConnected`;
+    const ABIFuncSend = `ABIFuncSendConnected<{${inputs}}>`;
+    const ABIParamlessCall = `ABIFuncParamlessCallConnected${outputs.length ===
+    0
+      ? ''
+      : `<{${outputs}}>`}`;
+    const ABIFuncCall = `ABIFuncCallConnected<{${inputs}}${outputs.length === 0
       ? ''
       : `,{${outputs}}`}>`;
     const isConst = abiFunc.constant;
