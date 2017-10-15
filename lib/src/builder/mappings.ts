@@ -3,7 +3,7 @@ import * as path from 'path';
 
 export const getMapping = ({ filePath, inOut }) => {
   const resolvedPath = path.resolve(filePath).split('.')[0];
-  const file = `${resolvedPath}.${inOut}.json`;
+  const file = `${resolvedPath}.${inOut}.ts`;
   return existsSync(file) ? require(file) : '';
 };
 

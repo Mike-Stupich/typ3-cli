@@ -1,5 +1,0 @@
-{
-  "resolver": ["address"],
-  "owner": ["owner"],
-  "ttl": ["timeToLive"]
-}
