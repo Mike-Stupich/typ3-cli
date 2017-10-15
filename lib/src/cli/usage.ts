@@ -2,24 +2,28 @@ import * as getUsage from 'command-line-usage';
 
 const sections = [
     {
-      header: 'cli for typ3',
-      content: 'Generate a type definition file for ABI\'s.'
+      header: 'typ3-cli',
+      content: 'Generate a type definition file for Ethereum ABI\'s.'
     },
     {
       header: 'Options',
       optionList: [
         {
-          name: 'f',
-          typeLabel: '[underline]{file}',
-          description: 'The ABI to process.'
+          name: 'files',
+          alias: 'f',
+          typeLabel: 'files, ...',
+          description: 'The ABI files to process.',
+          multiple: true
         },
         {
-            name: 'o',
-            typeLabel: '[underline]{output}',
+            name: 'output',
+            alias: 'o',
+            typeLabel: 'outputFile',
             description: 'Destination of type definition file'
         },
         {
-          name: 'h',
+          name: 'help',
+          alias: 'h',
           description: 'Print this usage guide.'
         }
       ]
