@@ -27,8 +27,7 @@ export const buildTypedABIs = () => {
 const typedABI = (file: string, printer: Output, types: Types) => {
   const fileDir = file.split(sep);
   const rootPath = process.cwd();
-  const fileName = basename(fileDir[fileDir.length - 1]).split('.')[0]
-  console.log(fileName)
+  const fileName = basename(fileDir[fileDir.length - 1]).split('.')[0];
   const filePath = join(rootPath, file);
   printer.print(
     `export interface I${fileName[0].toUpperCase()}${fileName.length > 1
