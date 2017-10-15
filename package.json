@@ -1,10 +1,9 @@
 {
   "name": "typ3-cli",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "CLI tool for creating typed definition files from ABI",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Mike-Stupich/typ3-cli.git"
