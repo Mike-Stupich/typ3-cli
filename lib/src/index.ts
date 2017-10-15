@@ -1,6 +1,6 @@
 import { options, usage } from './cli';
 import { Output } from './io';
-import { join, sep } from 'path';
+import { join, sep, basename } from 'path';
 import { getMapping, getMappings, Types, interfaces } from './builder';
 
 export const buildTypedABIs = () => {
@@ -27,7 +27,8 @@ export const buildTypedABIs = () => {
 const typedABI = (file: string, printer: Output, types: Types) => {
   const fileDir = file.split(sep);
   const rootPath = process.cwd();
-  const fileName = fileDir[fileDir.length - 1].split('.')[0];
+  const fileName = basename(fileDir[fileDir.length - 1]).split('.')[0]
+  console.log(fileName)
   const filePath = join(rootPath, file);
   printer.print(
     `export interface I${fileName[0].toUpperCase()}${fileName.length > 1
