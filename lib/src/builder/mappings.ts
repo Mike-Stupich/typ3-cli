@@ -14,7 +14,7 @@ export const getMappings = ({ types, abiFunc, config, isInput }) => {
     const userSuppliedMappingExists =
       config && config[abiFunc.name] && config[abiFunc.name][index];
     const name =
-      userSuppliedMappingExists || curr.name || `${curr.type}_${index}`;
+        curr.name || userSuppliedMappingExists || `${curr.type}_${index}`;
     return (str += `${name}: ${curr.type}${index === inputsOrOutputs.length - 1
       ? ''
       : ', '}`);

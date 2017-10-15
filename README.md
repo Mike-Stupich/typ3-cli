@@ -22,3 +22,15 @@ import { IAuction, IConnectedAuction } from './abiTypes'
 ```
 
 This will allow your code editor to auto generate the functions and properties from your ABI
+
+### Features
+An additional *filename*.output.ts file can be placed in the same folder as the ABI file to map names to unnamed output results from the ABI. The file should look like this:
+```ts
+// auction.output.ts
+module.exports = {
+    resolver: ["resolverAddress"],
+    owner: ["ownerAddress"],
+    ttl: ["timeToLive"]
+};
+```
+where each key is the name of a function, and the value is the name to map to the result.
