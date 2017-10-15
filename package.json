@@ -1,11 +1,9 @@
 {
   "name": "typ3-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI tool for creating typed definition files from ABI",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "test": "npm run build && node dist/index.js -f lib/test/auction.json -o output"
   },
   "repository": {
     "type": "git",
