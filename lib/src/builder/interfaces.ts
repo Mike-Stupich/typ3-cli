@@ -1,7 +1,7 @@
 export const interfaces = `
 interface ABIFuncParamlessCall<T = void> {
   encodeArguments(): string;
-  decodeArguments(str:string): any;
+  decodeArguments(str: string): any;
   decodeReturnValue(argStr: string): T;
 }
 
@@ -20,16 +20,27 @@ interface ABIFuncSend<T> {
   encodeArguments(x: T): string;
   decodeArguments(str: string): T;
 }
-interface ABIFuncCallConnected<T, K = void> {
-  (x: T): Promise<K>;
+type ABIFuncCallConnected<T, K = void> = (x: T, txObj?: ICallTxObj) => Promise<K>;
+type ABIFuncParamlessCallConnected<T = void> = (txObj?: ICallTxObj) => Promise<T>;
+type ABIFuncSendConnected<T> = (x: T, txObj?: ITransactionObj) => Promise<string>;
+type ABIFuncParamlessSendConnected = (txObj?: ITransactionObj) => Promise<string>;
+
+interface ITransactionObj {
+  from?: string;
+  to?: string;
+  gas?: string;
+  gasPrice?: string;
+  value?: string;
+  data?: string;
+  nonce?: string;
 }
-interface ABIFuncParamlessCallConnected<T = void> {
-  (): Promise<T>;
-}
-interface ABIFuncSendConnected<T> {
-  (x: T): Promise<string>;
-}
-interface ABIFuncParamlessSendConnected {
-  (): Promise<string>;
+
+interface ICallTxObj {
+  from?: string;
+  to?: string;
+  gas?: string;
+  gasPrice?: string;
+  value?: string;
+  data?: string;
 }
 `;
