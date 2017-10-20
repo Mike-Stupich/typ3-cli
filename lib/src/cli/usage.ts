@@ -1,4 +1,4 @@
-import * as getUsage from 'command-line-usage'; // tslint: disable-line
+import * as getUsage from 'command-line-usage';
 
 const sections = [
     {

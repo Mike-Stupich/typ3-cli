@@ -1,26 +1,27 @@
-import { open } from 'fs';
+import { readFileSync } from 'fs';
 import * as path from 'path';
-import { Types } from "./types";
-export const openCustomOutputFile = (async (filePath: string): Promise<boolean> => {
+
+export const openCustomOutputFile = async (filePath: string): Promise<string> => {
   const resolvedPath = path.resolve(filePath).split('.')[0];
   const file = `${resolvedPath}.output.ts`;
-  open(file, 'r+', (err, fd) => {
-    if (err) {
-      return false;
-    }
-  });
-  return true;
-});
+  let contents
+  try {
+    contents = require(file)
+  } catch (err) {
+    contents = ''
+  }
+  return contents;
+}
 
-export const getMappings = (
-  types: Types,
+export const getMappings = async (
+  types: any,
   abiFunc: any,
   config: any,
   isInput: boolean
-  ): string => {
+): Promise<string> => {
   const inputsOrOutputs: any[] = isInput ? abiFunc.inputs : abiFunc.outputs;
   const mappedFunctions: string = inputsOrOutputs.reduce((str, curr, index) => {
-    types.mapType(curr.type);
+    mapType(curr.type, types);
     const userSuppliedMappingExists: boolean =
       config && config[abiFunc.name] && config[abiFunc.name][index];
     const name: TemplateStringsArray =
@@ -31,3 +32,17 @@ export const getMappings = (
   }, '');
   return mappedFunctions;
 };
+
+const mapType = async (type: string, allTypes: any) => {
+  type = type.split('[]')[0];
+  if (type === 'string') {
+    return;
+  }
+  const isArray = type.split('[]');
+  const isBool = type.startsWith('bool');
+
+  const strFactory = isBool ? 'boolean' : 'any';
+  if (!allTypes[type]) {
+    allTypes[type] = strFactory;
+  }
+}

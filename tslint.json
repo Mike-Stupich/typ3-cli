@@ -33,7 +33,8 @@
       "no-duplicate-variable": true,
       "only-arrow-functions": true,
       "strict-type-predicates": true,
-      "whitespace": true
+      "whitespace": true,
+      "no-unused-variable":true
     },
     "rulesDirectory": []
   }
