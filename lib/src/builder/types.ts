@@ -1,7 +1,7 @@
 export class Types {
-  private types = {};
+  private types: any = {};
 
-  public mapType = (type: string) => {
+  public mapType = async (type: string) => {
     type = type.split('[]')[0];
     if (type === 'string') {
       return;
@@ -13,7 +13,7 @@ export class Types {
     if (!this.types[type]) {
       this.types[type] = strFactory;
     }
-  };
+  }
 
   public getTypes = () => this.types;
 }

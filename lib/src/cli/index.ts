@@ -1,5 +1,5 @@
-import * as commandLineArgs from 'command-line-args'
-import { optionDefinitions } from './options'
-export { usage } from './usage'
+import * as commandLineArgs from 'command-line-args';
+import { optionDefinitions } from './options';
+export { usage } from './usage';
 
-export const options = commandLineArgs(optionDefinitions)
+export const options = commandLineArgs(optionDefinitions);

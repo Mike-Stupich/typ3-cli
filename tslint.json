@@ -1,7 +1,7 @@
 {
     "defaultSeverity": "error",
     "extends": [
-      "tslint:recommended"
+      "tslint:strict"
     ],
     "jsRules": {
       "quotemark": false,
@@ -15,21 +15,25 @@
       "object-literal-sort-keys": false,
       "arrow-return-shorthand": true,
       "prefer-method-signature": true,
-      "arrow-parens": false,
+      "arrow-parens": true,
       "no-unnecessary-type-assertion": true,
       "array-type": [
         true,
         "array"
       ],
-      "interface-name": false,
+      "interface-name": true,
       "no-duplicate-imports": true,
       "no-console": false,
       "no-var-requires": false,
       "jsx-wrap-multiline": false,
-      "comment-format": false,
-      "ordered-imports": false,
-      "semicolon":false,
-      "no-consecutive-blank-lines":false
+      "comment-format": true,
+      "ordered-imports": true,
+      "semicolon":true,
+      "no-consecutive-blank-lines":false,
+      "no-duplicate-variable": true,
+      "only-arrow-functions": true,
+      "strict-type-predicates": true,
+      "whitespace": true
     },
     "rulesDirectory": []
   }

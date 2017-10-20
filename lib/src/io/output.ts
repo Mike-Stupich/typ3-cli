@@ -1,18 +1,20 @@
-import { appendFileSync, unlinkSync, existsSync } from 'fs'
+import { appendFileSync, open, unlink } from 'fs';
 
 export class Output {
-    private outputFile: string
+    private outputFile: string;
 
-    public constructor(filePath) {
-        if (existsSync(filePath)) {
-            unlinkSync(filePath)
-        }
-        this.outputFile = filePath
+    public constructor(filePath: string) {
+        open(filePath, 'w', ((err,fd) => {
+            if (err) {
+                console.error(err);
+            }
+        }));
+        this.outputFile = filePath;
     }
 
-    public print = (text) => {
-        appendFileSync(this.outputFile, `${text}\n`)
+    public print = (text: string) => {
+        appendFileSync(this.outputFile, `${text}\n`);
     }
 
-    public getOutput = () => this.outputFile
+    public getOutput = () => this.outputFile;
 }

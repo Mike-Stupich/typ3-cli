@@ -1,31 +1,31 @@
+import { basename, join, sep } from 'path';
+import { getMappings, interfaces, openCustomOutputFile, Types } from './builder';
 import { options, usage } from './cli';
 import { Output } from './io';
-import { join, sep, basename } from 'path';
-import { getMapping, getMappings, Types, interfaces } from './builder';
 
-export const buildTypedABIs = () => {
-  const opts = options;
-  const files = opts.files;
-  const types = new Types();
-  const outputDir = opts.outputDir ? opts.outputDir : './abiTypes.ts';
+export const buildTypedABIs = async () => {
+  const opts: any = options;
+  const files: string[] = opts.files;
+  const types: Types = new Types();
+  const outputDir: string = opts.outputDir ? opts.outputDir : './abiTypes.ts';
 
   if (!files || opts.help) {
     return console.log(usage);
   }
 
-  const printer = new Output(outputDir);
+  const printer: Output = new Output(outputDir);
 
-  files.map(file => {
+  files.map(async (file) => {
     typedABI(file, printer, types);
     typedABIConnected(file, printer, types);
   });
   printer.print(interfaces);
-  Object.keys(types.getTypes()).forEach((curr, index) => {
-    printer.print(`type ${curr} = ${types.getTypes()[curr]}`);
+  Object.keys(types.getTypes()).map((curr, index) => {
+    printer.print(`type ${curr} = ${types.getTypes()[curr]};`);
   });
 };
 
-const typedABI = (file: string, printer: Output, types: Types) => {
+const typedABI = async (file: string, printer: Output, types: Types) => {
   const fileDir = file.split(sep);
   const rootPath = process.cwd();
   const fileName = basename(fileDir[fileDir.length - 1]).split('.')[0];
@@ -35,44 +35,43 @@ const typedABI = (file: string, printer: Output, types: Types) => {
       ? fileName.slice(1)
       : ''} {`
   );
-  const inputMappings = getMapping({ filePath, inOut: 'input' });
-  const outputMappings = getMapping({ filePath, inOut: 'output' });
-  require(filePath).map((abiFunc, index) => {
+  const outputMappings = openCustomOutputFile(filePath);
+  require(filePath).map(async (abiFunc: any, index: number) => {
     if (abiFunc.type !== 'function') {
       return;
     }
-    const inputs = getMappings({
+    const inputs = getMappings(
       types,
       abiFunc,
-      config: inputMappings,
-      isInput: true
-    });
-    const outputs = getMappings({
+      '',
+      true,
+    );
+    const outputs = getMappings(
       types,
       abiFunc,
-      config: outputMappings,
-      isInput: false
-    });
+      outputMappings,
+      false
+    );
 
-    const ABIParamlessSend = `ABIFuncParamlessSend`;
-    const ABIFuncSend = `ABIFuncSend<{${inputs}}>`;
-    const ABIParamlessCall = `ABIFuncParamlessCall${outputs.length === 0
+    const ABIParamlessSend = `IABIFuncParamlessSend`;
+    const ABIFuncSend = `IABIFuncSend<{${inputs}}>`;
+    const ABIParamlessCall = `IABIFuncParamlessCall${outputs.length === 0
       ? ''
       : `<{${outputs}}>`}`;
-    const ABIFuncCall = `ABIFuncCall<{${inputs}}${outputs.length === 0
+    const ABIFuncCall = `IABIFuncCall<{${inputs}}${outputs.length === 0
       ? ''
       : `,{${outputs}}`}>`;
     const isConst = abiFunc.constant;
     const param = isConst ? ABIFuncCall : ABIFuncSend;
     const paramless = isConst ? ABIParamlessCall : ABIParamlessSend;
     printer.print(
-      `${abiFunc.name}: ${inputs === '' ? `${paramless}` : `${param}`}`
+      `${abiFunc.name}: ${inputs === '' ? `${paramless};` : `${param};`}`
     );
   });
   printer.print('}');
 };
 
-const typedABIConnected = (file: string, printer: Output, types: Types) => {
+const typedABIConnected = async (file: string, printer: Output, types: Types) => {
   const fileDir = file.split(sep);
   const rootPath = process.cwd();
   const fileName = basename(fileDir[fileDir.length - 1]).split('.')[0];
@@ -82,24 +81,23 @@ const typedABIConnected = (file: string, printer: Output, types: Types) => {
       ? fileName.slice(1)
       : ''}Connected {`
   );
-  const inputMappings = getMapping({ filePath, inOut: 'input' });
-  const outputMappings = getMapping({ filePath, inOut: 'output' });
-  require(filePath).map((abiFunc, index) => {
+  const outputMappings = openCustomOutputFile(filePath);
+  require(filePath).map(async (abiFunc:any, index:number) => {
     if (abiFunc.type !== 'function') {
       return;
     }
-    const inputs = getMappings({
+    const inputs = getMappings(
       types,
       abiFunc,
-      config: inputMappings,
-      isInput: true
-    });
-    const outputs = getMappings({
+      '',
+      true
+    );
+    const outputs = getMappings(
       types,
       abiFunc,
-      config: outputMappings,
-      isInput: false
-    });
+      outputMappings,
+      false
+    );
 
     const ABIParamlessSend = `ABIFuncParamlessSendConnected`;
     const ABIFuncSend = `ABIFuncSendConnected<{${inputs}}>`;
@@ -114,7 +112,7 @@ const typedABIConnected = (file: string, printer: Output, types: Types) => {
     const param = isConst ? ABIFuncCall : ABIFuncSend;
     const paramless = isConst ? ABIParamlessCall : ABIParamlessSend;
     printer.print(
-      `${abiFunc.name}: ${inputs === '' ? `${paramless}` : `${param}`}`
+      `${abiFunc.name}: ${inputs === '' ? `${paramless};` : `${param};`}`
     );
   });
   printer.print('}');

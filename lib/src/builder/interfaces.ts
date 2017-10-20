@@ -1,22 +1,22 @@
 export const interfaces = `
-interface ABIFuncParamlessCall<T = void> {
+interface IABIFuncParamlessCall<T = void> {
   encodeArguments(): string;
   decodeArguments(str: string): any;
   decodeReturnValue(argStr: string): T;
 }
 
-interface ABIFuncCall<T, K = void> {
+interface IABIFuncCall<T, K = void> {
   encodeArguments(x: T): string;
   decodeArguments(str: string): T;
   decodeReturnValue(argStr: string): K;
 }
 
-interface ABIFuncParamlessSend {
+interface IABIFuncParamlessSend {
   encodeArguments(): string;
   decodeArguments(str: string): any;
 }
 
-interface ABIFuncSend<T> {
+interface IABIFuncSend<T> {
   encodeArguments(x: T): string;
   decodeArguments(str: string): T;
 }

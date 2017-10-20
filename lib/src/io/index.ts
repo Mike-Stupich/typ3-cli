@@ -1,1 +1,1 @@
-export { Output } from './output'
+export { Output } from './output';
