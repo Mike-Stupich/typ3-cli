@@ -8,19 +8,47 @@ import {
 } from './builder';
 import { options, usage } from './cli';
 
+interface IFilesWithOutput {
+  output?: string;
+  files: [{
+    file: string,
+    output: string
+  }] | string[];
+}
+
 export const buildTypedABIs = async () => {
   const opts: any = options;
   const files: string[] = opts.files;
-  const types: any = {};
-  const outputDir: string = opts.outputDir ? opts.outputDir : './abiTypes.ts';
-  const print = (text: string) => printToFile(text, outputDir)
-  await openFile(outputDir);
-
+  const outputDirs: string[] = opts.output ? opts.output : ['./abiTypes.ts'];
   if (!files || opts.help) {
     return console.log(usage);
   }
+  const filesWithOutput = await determineFileOutput(files, outputDirs);
+  filesWithOutput.output ? buildWithSingleOutput(filesWithOutput) : buildWithMultipleOutputs(filesWithOutput);
+};
 
-  await Promise.all(files.map(async (file) => {
+const buildWithMultipleOutputs = async (filesWithMultiOutputs: IFilesWithOutput) => {
+  const { files } = filesWithMultiOutputs;
+  const types: any = {};
+  await Promise.all((files as any[]).map(async (fileWithOutput) => {
+    const { file, output } = fileWithOutput;
+    const print = (text: string) => printToFile(text, output!);
+    await openFile(output!);
+    print(await typedABI(file, types));
+    print(await typedABIConnected(file, types));
+    print(interfaces);
+    Object.keys(types).map((curr, index) => {
+      print(`type ${curr} = ${types[curr]};`);
+    });
+  }));
+};
+
+const buildWithSingleOutput = async (filesWithSingleOutput: IFilesWithOutput) => {
+  const { files, output } = filesWithSingleOutput;
+  const types: any = {};
+  const print = (text: string) => printToFile(text, output!);
+  await openFile(output!);
+  await Promise.all((files as string[]).map(async (file) => {
     print(await typedABI(file, types));
     print(await typedABIConnected(file, types));
   }));
@@ -30,15 +58,29 @@ export const buildTypedABIs = async () => {
   });
 };
 
+const determineFileOutput = async (files: string[], outputs: string[]): Promise<IFilesWithOutput> => {
+  const numFiles = files.length;
+  const numOutputs = outputs.length;
+  if (numFiles === numOutputs) {
+    const arr: any = [];
+    files.map((file, index) => {
+      arr.push({ file, output: outputs[index] });
+    });
+    return { files: arr };
+  } else {
+    return { output: outputs[0], files };
+  }
+};
+
 const typedABI = async (file: string, types: any): Promise<string> => {
   const fileDir = file.split(sep);
   const rootPath = process.cwd();
   const fileName = basename(fileDir[fileDir.length - 1]).split('.')[0];
   const filePath = join(rootPath, file);
-  let str: string = '';
+  let str = '';
   str += `export interface I${fileName[0].toUpperCase()}${fileName.length > 1
     ? fileName.slice(1)
-    : ''} {\n`
+    : ''} {\n`;
   const outputMappings = await openCustomOutputFile(filePath);
   await Promise.all(require(filePath).map(async (abiFunc: any, index: number) => {
     if (abiFunc.type !== 'function') {
@@ -68,7 +110,7 @@ const typedABI = async (file: string, types: any): Promise<string> => {
     const isConst = abiFunc.constant;
     const param = isConst ? ABIFuncCall : ABIFuncSend;
     const paramless = isConst ? ABIParamlessCall : ABIParamlessSend;
-    str += `${abiFunc.name}: ${inputs === '' ? `${paramless};` : `${param};`}\n`
+    str += `${abiFunc.name}: ${inputs === '' ? `${paramless};` : `${param};`}\n`;
   }));
   str += '}\n';
   return str;
@@ -79,7 +121,7 @@ const typedABIConnected = async (file: string, types: any): Promise<string> => {
   const rootPath = process.cwd();
   const fileName = basename(fileDir[fileDir.length - 1]).split('.')[0];
   const filePath = join(rootPath, file);
-  let str: string = '';
+  let str = '';
   str +=
     `export interface I${fileName[0].toUpperCase()}${fileName.length > 1
       ? fileName.slice(1)
@@ -114,7 +156,7 @@ const typedABIConnected = async (file: string, types: any): Promise<string> => {
     const isConst = abiFunc.constant;
     const param = isConst ? ABIFuncCall : ABIFuncSend;
     const paramless = isConst ? ABIParamlessCall : ABIParamlessSend;
-    str += `${abiFunc.name}: ${inputs === '' ? `${paramless};` : `${param};`}\n`
+    str += `${abiFunc.name}: ${inputs === '' ? `${paramless};` : `${param};`}\n`;
   }));
   str += '}\n';
   return str;

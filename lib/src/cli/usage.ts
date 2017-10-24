@@ -11,15 +11,17 @@ const sections = [
         {
           name: 'files',
           alias: 'f',
-          typeLabel: 'files, ...',
+          typeLabel: 'files...',
           description: 'The ABI files to process.',
           multiple: true
         },
         {
             name: 'output',
             alias: 'o',
-            typeLabel: 'outputFile',
-            description: 'Destination of type definition file'
+            typeLabel: 'outputFiles...',
+            description: 'Destinations of type definition file. Can be either 1 file for all,\
+             or one output file for each input file.',
+            multiple: true
         },
         {
           name: 'help',

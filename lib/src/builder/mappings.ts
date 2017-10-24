@@ -1,17 +1,17 @@
-import { readFileSync } from 'fs';
+import { readFile } from 'fs';
 import * as path from 'path';
 
 export const openCustomOutputFile = async (filePath: string): Promise<string> => {
   const resolvedPath = path.resolve(filePath).split('.')[0];
   const file = `${resolvedPath}.output.ts`;
-  let contents
+  let contents;
   try {
-    contents = require(file)
+    contents = require(file);
   } catch (err) {
-    contents = ''
+    contents = '';
   }
   return contents;
-}
+};
 
 export const getMappings = async (
   types: any,
@@ -45,4 +45,4 @@ const mapType = async (type: string, allTypes: any) => {
   if (!allTypes[type]) {
     allTypes[type] = strFactory;
   }
-}
+};

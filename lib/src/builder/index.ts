@@ -8,8 +8,8 @@ export const openFile = async (file: string) => {
             console.error(err);
         }
     }));
-}
+};
 
 export const printToFile = (text: string, outputFile: string) => {
-    appendFileSync(outputFile, `${text}\n`)
-}
+    appendFileSync(outputFile, `${text}\n`);
+};
