@@ -77,10 +77,10 @@ const typedABI = async (file: string, types: any): Promise<string> => {
   const rootPath = process.cwd();
   const fileName = basename(fileDir[fileDir.length - 1]).split('.')[0];
   const filePath = join(rootPath, file);
-  let str = '';
-  str += `export interface I${fileName[0].toUpperCase()}${fileName.length > 1
+  const upperFileName = `${fileName[0].toUpperCase()}${fileName.length > 1
     ? fileName.slice(1)
-    : ''} {\n`;
+    : ''}`;
+  let ABIStrings = '';
   const outputMappings = await openCustomOutputFile(filePath);
   await Promise.all(require(filePath).map(async (abiFunc: any, index: number) => {
     if (abiFunc.type !== 'function') {
@@ -110,10 +110,11 @@ const typedABI = async (file: string, types: any): Promise<string> => {
     const isConst = abiFunc.constant;
     const param = isConst ? ABIFuncCall : ABIFuncSend;
     const paramless = isConst ? ABIParamlessCall : ABIParamlessSend;
-    str += `${abiFunc.name}: ${inputs === '' ? `${paramless};` : `${param};`}\n`;
+    const abiFuncContents = inputs === '' ? paramless : param;
+    ABIStrings += `${abiFunc.name}: ${abiFuncContents};\n`;
   }));
-  str += '}\n';
-  return str;
+  const typedABIString = `export interface I${upperFileName} {\n${ABIStrings}}\n`;
+  return typedABIString;
 };
 
 const typedABIConnected = async (file: string, types: any): Promise<string> => {
@@ -121,11 +122,10 @@ const typedABIConnected = async (file: string, types: any): Promise<string> => {
   const rootPath = process.cwd();
   const fileName = basename(fileDir[fileDir.length - 1]).split('.')[0];
   const filePath = join(rootPath, file);
-  let str = '';
-  str +=
-    `export interface I${fileName[0].toUpperCase()}${fileName.length > 1
-      ? fileName.slice(1)
-      : ''}Connected {\n`;
+  const upperFileName = `${fileName[0].toUpperCase()}${fileName.length > 1
+    ? fileName.slice(1)
+    : ''}Connected`;
+  let ABIstrings = '';
   const outputMappings = await openCustomOutputFile(filePath);
   await Promise.all(require(filePath).map(async (abiFunc: any, index: number) => {
     if (abiFunc.type !== 'function') {
@@ -143,7 +143,6 @@ const typedABIConnected = async (file: string, types: any): Promise<string> => {
       outputMappings,
       false
     );
-
     const ABIParamlessSend = `ABIFuncParamlessSendConnected`;
     const ABIFuncSend = `ABIFuncSendConnected<{${inputs}}>`;
     const ABIParamlessCall = `ABIFuncParamlessCallConnected${outputs.length ===
@@ -156,8 +155,9 @@ const typedABIConnected = async (file: string, types: any): Promise<string> => {
     const isConst = abiFunc.constant;
     const param = isConst ? ABIFuncCall : ABIFuncSend;
     const paramless = isConst ? ABIParamlessCall : ABIParamlessSend;
-    str += `${abiFunc.name}: ${inputs === '' ? `${paramless};` : `${param};`}\n`;
+    const abiFuncContents = inputs === '' ? paramless : param;
+    ABIstrings += `${abiFunc.name}: ${abiFuncContents};\n`;
   }));
-  str += '}\n';
-  return str;
+  const connectedABIString = `export interface I${upperFileName} {\n${ABIstrings}}\n`;
+  return connectedABIString;
 };

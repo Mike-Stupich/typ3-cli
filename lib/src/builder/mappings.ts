@@ -26,9 +26,9 @@ export const getMappings = async (
       config && config[abiFunc.name] && config[abiFunc.name][index];
     const name: TemplateStringsArray =
       curr.name || userSuppliedMappingExists || `${index}`;
-    return (str += `${name}: ${curr.type}${index === inputsOrOutputs.length - 1
-      ? ''
-      : ', '}`);
+    const endOfLine = (index === inputsOrOutputs.length - 1) ? '' : ', ';
+    const mappingContents = `${name}: ${curr.type}${endOfLine}`;
+    return (str += mappingContents);
   }, '');
   return mappedFunctions;
 };

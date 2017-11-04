@@ -14,11 +14,11 @@ typ3-cli -f ./dist/auction.json
 ```
  or with optional -o
 ```shell
-typ3-cli -f ./dist/auction.json -o ./abiTypes.ts
+typ3-cli -f ./auction.json -o ./auctionTypes.ts
 ```
 Then to import the typed interface,
 ```ts
-import { IAuction, IConnectedAuction } from './abiTypes'
+import { IAuction, IConnectedAuction } from './auctionTypes'
 ```
 
 This will allow your code editor to auto generate the functions and properties from your ABI
@@ -34,3 +34,8 @@ module.exports = {
 };
 ```
 where each key is the name of a function, and the value is the name to map to the result.
+
+Multiple output files can be specified when there are multiple input files, to print each type definition to a specific file. Example usage:
+```shell
+typ3-cli -f ./testABIs/auction.json ./testABIs/ERC20.json -o ./auction.ts ./erc20.ts
+```

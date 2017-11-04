@@ -3,7 +3,6 @@
   "version": "1.0.4",
   "description": "CLI tool for creating typed definition files from ABI",
   "main": "dist/index.js",
-  "typings": "index",
   "scripts": {},
   "repository": {
     "type": "git",
@@ -17,9 +16,9 @@
   "homepage": "https://github.com/Mike-Stupich/typ3-cli#readme",
   "devDependencies": {
     "@types/command-line-args": "^4.0.1",
-    "@types/node": "^8.0.46",
-    "tslint": "^5.7.0",
-    "typescript": "^2.5.3"
+    "@types/node": "^8.0.47",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1"
   },
   "dependencies": {
     "command-line-args": "^4.0.7",
